@@ -1,21 +1,49 @@
-node {
-    def app
-
-    stage('Clone repository') {
-        checkout scm
+pipeline {
+  environment {
+    registry = "estherjeba/docker-test"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+  agent any
+  tools {nodejs "node" }
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/estherjeba/hellonode.git'
+      }
     }
-    stage('Build image') {
-        app = docker.build("estherjeba/hellonode")
+    stage('Build') {
+       steps {
+         sh 'npm install'
+       }
     }
-    stage('Test image') {
-            app.inside {
-            sh 'echo "Tests passed"'
+    stage('Test') {
+      steps {
+        sh 'npm test'
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
+      }
     }
-    stage('Push image') {
-            docker.withRegistry('https://docker-test.hub.docker.com', 'dockerhub') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+    stage('Deploy Image') {
+      steps{
+         script {
+            docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
         }
+      }
     }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }
+  }
 }
+
+
