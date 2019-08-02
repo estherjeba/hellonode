@@ -25,15 +25,23 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"  
         }
       }
     }
     stage('Deploy Image') {
       steps{
          script {
+            def version = readFile('VERSION')
+            def versions = version.split('\\.')
+            def major = versions[0]
+            def minor = versions[0] + '.' + versions[1]
+            def patch = version.trim()
             docker.withRegistry( '', registryCredential ) {
             dockerImage.push()
+            dockerImage.push(major)
+            dockerImage.push(minor)
+            dockerImage.push(patch)
           }
         }
       }
