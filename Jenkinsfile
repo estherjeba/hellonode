@@ -4,6 +4,9 @@ pipeline {
     registryCredential = 'dockerhub'
     dockerImage = ''
   }
+  options {
+    disableConcurrentBuilds ()
+  }
   agent any
   tools { nodejs "node" }
   stages {
