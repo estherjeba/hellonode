@@ -34,7 +34,6 @@ pipeline {
          script {
             def version = readFile('VERSION')
             docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
             dockerImage.push(version)
           }
         }
