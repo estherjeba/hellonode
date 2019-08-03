@@ -2,7 +2,7 @@ pipeline {
   environment {
     VERSION = 'latest'
     ECRURL = 'http://980284290314.dkr.ecr.ap-south-1.amazonaws.com'
-    ECRCRED = 'ecr:ap-south-1:tap_ecr'
+    
     PROJECT = 'esther-auditplus-site'
     IMAGE = 'esther-auditplus-site:latest'
   }
@@ -37,7 +37,7 @@ pipeline {
     stage('Deploy Image') {
       steps{
          script {
-            docker.withRegistry( ECRURL,ECRCRED ) {
+            docker.withRegistry( ECRURL,`echo $ECRCRED` ) {
             docker.image(IMAGE).push()
           }
         }
@@ -45,7 +45,7 @@ pipeline {
     }
     stage('Remove Unused docker image') {
       steps{
-        sh 'docker rmi $IMAGE'
+        sh "docker rmi $IMAGE"
       }
     }
   }
