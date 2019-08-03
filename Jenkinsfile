@@ -1,8 +1,10 @@
 pipeline {
   environment {
-    REPOSITORY='980284290314.dkr.ecr.ap-south-1.amazonaws.com'
+    VERSION = 'latest'
+    ECRURL = 'http://980284290314.dkr.ecr.ap-south-1.amazonaws.com'
     registryCredential = 'Amazon ECR Registry:Aws-AP_SOUTH_1'
-    IMAGE='esther-auditplus-site'
+    PROJECT = 'esther-auditplus-site'
+    IMAGE = 'esther-auditplus-site:latest'
   }
   options {
     disableConcurrentBuilds ()
@@ -12,7 +14,7 @@ pipeline {
   stages {
     stage('Cloning Git') {
       steps {
-        git 'https://github.com/estherjeba/hellodocker.git'
+        git 'https://github.com/estherjeba/hellonode.git'
       }
     }
     stage('Build') {
@@ -28,14 +30,15 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          docker build -f ./Dockerfile 
+          docker.build("$IMAGE", . )
         }
       }
     }
     stage('Deploy Image') {
       steps{
          script {
-            docker.withRegistry( '', registryCredential ) {
+            sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
+            docker.withRegistry( ECRURL,registryCredential ) {
             docker.image(IMAGE).push()
           }
         }
