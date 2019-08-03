@@ -2,7 +2,7 @@ pipeline {
   environment {
     VERSION = 'latest'
     ECRURL = 'http://980284290314.dkr.ecr.ap-south-1.amazonaws.com'
-    
+    ECRCRED = 'ecr:ap-south-1:b994d093-c000-4991-bbc7-906d7f11abc0' 
     PROJECT = 'esther-auditplus-site'
     IMAGE = 'esther-auditplus-site:latest'
   }
