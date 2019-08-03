@@ -37,7 +37,7 @@ pipeline {
     stage('Deploy Image') {
       steps{
          script {
-            docker.withRegistry( ECRURL,`echo $ECRCRED` ) {
+            docker.withRegistry( ECRURL,ECRCRED ) {
             docker.image(IMAGE).push()
           }
         }
