@@ -37,7 +37,6 @@ pipeline {
     stage('Deploy Image') {
       steps{
          script {
-            sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
             docker.withRegistry( ECRURL,registryCredential ) {
             docker.image(IMAGE).push()
           }
