@@ -28,7 +28,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          docker build -f ./Dockerfile -t ${REPOSITORY}/${IMAGE}:latest  
+          docker build -f ./Dockerfile -t ${REPOSITORY}/${IMAGE} 
         }
       }
     }
