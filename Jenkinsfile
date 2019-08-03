@@ -1,8 +1,8 @@
 pipeline {
   environment {
-    REPOSITORY=980284290314.dkr.ecr.ap-south-1.amazonaws.com
+    REPOSITORY='980284290314.dkr.ecr.ap-south-1.amazonaws.com'
     registryCredential = 'Amazon ECR Registry:Aws-AP_SOUTH_1'
-    IMAGE=esther-auditplus-site
+    IMAGE='esther-auditplus-site'
   }
   options {
     disableConcurrentBuilds ()
