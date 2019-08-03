@@ -45,7 +45,9 @@ pipeline {
     }
     stage('Remove Unused docker image') {
       steps{
-        sh 'docker rmi $IMAGE'
+        script {
+          docker rmi $IMAGE
+        }
       }
     }
   }
