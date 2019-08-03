@@ -1,8 +1,8 @@
 pipeline {
   environment {
-    registry = "estherjeba/docker-test"
-    registryCredential = 'dockerhub'
-    dockerImage = ''
+    REPOSITORY=980284290314.dkr.ecr.ap-south-1.amazonaws.com
+    registryCredential = 'Amazon ECR Registry:Aws-AP_SOUTH_1'
+    IMAGE=esther-auditplus-site
   }
   options {
     disableConcurrentBuilds ()
@@ -12,7 +12,7 @@ pipeline {
   stages {
     stage('Cloning Git') {
       steps {
-        git 'https://github.com/estherjeba/hellonode.git'
+        git 'https://github.com/estherjeba/hellodocker.git'
       }
     }
     stage('Build') {
@@ -28,7 +28,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"  
+          docker build -f ./Dockerfile -t ${REPOSITORY}/${IMAGE}:latest  
         }
       }
     }
@@ -36,14 +36,14 @@ pipeline {
       steps{
          script {
             docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
+            docker.image(IMAGE).push()
           }
         }
       }
     }
     stage('Remove Unused docker image') {
       steps{
-        sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker rmi $IMAGE"
       }
     }
   }
