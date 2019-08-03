@@ -30,7 +30,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          docker.build("$IMAGE", /Dockerfile )
+          docker.build IMAGE
         }
       }
     }
@@ -45,9 +45,7 @@ pipeline {
     }
     stage('Remove Unused docker image') {
       steps{
-        script {
-          docker rmi $IMAGE
-        }
+        sh 'docker rmi $IMAGE'
       }
     }
   }
